@@ -2,9 +2,11 @@ import express from "express";
 import router from './routes/notes.js';
 import mongoose from 'mongoose';
 import postsRouter from "./routes/posts.js";
+import cors from "cors";
 
 const app = express();
 app.use(express.json());
+app.use(cors({ origin: "*", methods: ["GET", "POST", "PUT", "DELETE"], credentials: true }));
 
 // koneksi MongoDB
 mongoose.connect('mongodb+srv://fegeirfan_db_user:Cikarang123@cluster0.fnk9fp9.mongodb.net/?appName=Cluster0')
