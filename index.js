@@ -7,7 +7,7 @@ const app = express();
 app.use(express.json());
 
 // koneksi MongoDB
-mongoose.connect('mongodb+srv://fegeirfan_db_user:<db_password>@cluster0.fnk9fp9.mongodb.net/?appName=Cluster0')
+mongoose.connect('mongodb+srv://fegeirfan_db_user:Cikarang123@cluster0.fnk9fp9.mongodb.net/?appName=Cluster0')
   .then(() => { console.log('Database connected!'); })
   .catch((err) => { console.error('Database connection error:', err); });
 
