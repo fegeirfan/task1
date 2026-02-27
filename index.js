@@ -54,3 +54,4 @@ const startServer = async () => {
     console.log("Server jalan di port localhost:3000");
   });
 startServer();
+export default app;
