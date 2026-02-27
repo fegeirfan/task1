@@ -9,7 +9,7 @@ router.post("/", async (req, res) => {
     const { title, content, author } = req.body;
     const newPost = await Post.create({ title, content, author });
     console.log("Post created:", newPost);
-    res.status(201).json(author);
+    res.status(201).json(newPost);
 
   } catch (err) {
     res.status(500).json({ error: err.message });
