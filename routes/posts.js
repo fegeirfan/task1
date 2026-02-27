@@ -27,8 +27,10 @@ router.get("/", async (req, res) => {
 // UPDATE
 router.put("/:id", async (req, res) => {
   try {
-    const { content } = req.body;
-    const updated = await Post.findByIdAndUpdate(req.params.id, { content }, { new: true });
+    const { content, author } = req.body;
+    const updateData = { content };
+    if (author) updateData.author = author;
+    const updated = await Post.findByIdAndUpdate(req.params.id, updateData, { new: true });
     res.json(updated);
   } catch (err) {
     res.status(500).json({ error: err.message });

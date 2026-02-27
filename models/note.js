@@ -2,18 +2,21 @@ const notes = [{
   id: 1,
   title: 'first note',
   content: 'My first note is here.',
+  author: 'Admin'
 },
 {
   id: 2,
   title: 'secondnote',
-  content: 'My second note is here.'
+  content: 'My second note is here.',
+  author: 'Admin'
 }
 ];
 
 const list = () => {
-  return notes.map(({ id, title }) => ({
+  return notes.map(({ id, title, author }) => ({
     id,
-    title
+    title,
+    author
   }));
 };
 
@@ -26,7 +29,7 @@ const get = (id) => {
 
   return note;
 };
-const create = (title, content) => {
+const create = (title, content, author = 'Anonymous') => {
   const lastId = notes.length
     ? notes[notes.length - 1].id
     : 0;
@@ -34,14 +37,15 @@ const create = (title, content) => {
   const newNote = {
     id: lastId + 1,
     title,
-    content
+    content,
+    author
   };
 
   notes.push(newNote);
   return newNote;
 };
 
-const update = (id, title, content) => {
+const update = (id, title, content, author) => {
   const index = notes.findIndex((note) => note.id === id);
 
   if (index === -1) {
@@ -51,7 +55,8 @@ const update = (id, title, content) => {
   const updatedNote = {
     ...notes[index],
     title,
-    content
+    content,
+    author: author || notes[index].author
   };
 
   notes[index] = updatedNote;
@@ -73,7 +78,7 @@ const remove = (id) => {
 export default {
   list,
    get,
-    create, 
-    update, 
-    remove
+     create, 
+     update, 
+     remove
 };

@@ -20,10 +20,10 @@ router.get('/:id', (req, res, next) => {
 });
 
 router.post('/', (req, res, next) => {
-  const { title, content } = req.body;
+  const { title, content, author } = req.body;
 
   try {
-    const note = Note.create(title, content);
+    const note = Note.create(title, content, author);
     res.status(201).json(note);
   } catch (e) {
     next(e);
@@ -31,10 +31,10 @@ router.post('/', (req, res, next) => {
 });
 router.put('/:id', (req, res, next) => {
   const id = Number(req.params.id);
-  const { title, content } = req.body;
+  const { title, content, author } = req.body;
 
   try {
-    const note = Note.update(id, title, content);
+    const note = Note.update(id, title, content, author);
     res.json(note);
   } catch (e) {
     next(e);
