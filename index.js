@@ -39,7 +39,7 @@ app.get("/error", (req, res, next) => {
   const err = new Error("Not Authorized");
   err.status = 401;
   next(err);
-});
+}); 
 
 app.use((err, req, res, next) => {
   res.status(err.status || 500).send(err.message || "Server Error");
