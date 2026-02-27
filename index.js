@@ -48,9 +48,9 @@ app.use((err, req, res, next) => {
 // mulai server setelah koneksi MongoDB berhasil
 const startServer = async () => {
   await connectDB();
-  app.listen(3000, () => {
+ 
+};
+ app.listen(3000, () => {
     console.log("Server jalan di port localhost:3000");
   });
-};
-
 startServer();
