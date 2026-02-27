@@ -7,7 +7,7 @@ const router = express.Router();
 router.post("/", async (req, res) => {
   try {
     const { title, content } = req.body;
-    const newPost = await Post.create({ title, content });
+    const newPost = await Post.create({ title, content, author });
     res.status(201).json(newPost);
   } catch (err) {
     res.status(500).json({ error: err.message });
