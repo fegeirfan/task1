@@ -1,14 +1,23 @@
 import express from "express";
 import { Post } from "../models/index.js";
+import { authenticateToken } from "../middleware/auth.js";
 
 const router = express.Router();
 
-// CREATE
-router.post("/", async (req, res) => {
+// CREATE - butuh auth
+router.post("/", authenticateToken, async (req, res) => {
   try {
     const { title, content, author } = req.body;
-    const newPost = await Post.create({ title, content, author });
-    console.log("Post created:", newPost);
+
+    if (!title || !content || !author) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
+
+    const newPost = await Post.create({ 
+      title, 
+      content, 
+      author: req.user.email // Ambil dari token JWT
+    });
     res.status(201).json(newPost);
 
   } catch (err) {
@@ -16,10 +25,10 @@ router.post("/", async (req, res) => {
   }
 });
 
-// READ
+// READ - public (tidak butuh auth)
 router.get("/", async (req, res) => {
   try {
-    const posts = await Post.find();
+    const posts = await Post.find().sort({ createdAt: -1 });
     res.json(posts);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -29,21 +38,36 @@ router.get("/", async (req, res) => {
 // UPDATE
 router.put("/:id", async (req, res) => {
   try {
-    const { content, author } = req.body;
-    const updateData = { content };
-    if (author) updateData.author = author;
-    const updated = await Post.findByIdAndUpdate(req.params.id, updateData, { new: true });
+    const { title, content, author } = req.body;
+
+    const updated = await Post.findByIdAndUpdate(
+      req.params.id,
+      { title, content, author },
+      { new: true, runValidators: true }
+    );
+
+    if (!updated) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
     res.json(updated);
+
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
-// DELETE
-router.delete("/:id", async (req, res) => {
+// DELETE - butuh auth
+router.delete("/:id", authenticateToken, async (req, res) => {
   try {
-    await Post.findByIdAndDelete(req.params.id);
-    res.json({ message: "Post deleted" });
+    const deleted = await Post.findByIdAndDelete(req.params.id);
+
+    if (!deleted) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+    res.json({ message: "Post deleted successfully" });
+
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

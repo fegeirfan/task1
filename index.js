@@ -1,57 +1,84 @@
 import express from "express";
-import router from './routes/notes.js';
-import mongoose from 'mongoose';
-import postsRouter from "./routes/posts.js";
+import mongoose from "mongoose";
 import cors from "cors";
+import dotenv from "dotenv";
+
+import router from "./routes/notes.js";
+import postsRouter from "./routes/posts.js";
+import authRouter from "./routes/auth.js";
+
+// =======================
+// LOAD ENV
+// =======================
+dotenv.config();
 
 const app = express();
-app.use(cors({ origin: "*", methods: ["GET", "POST", "PUT", "DELETE"], allowedHeaders: ["Content-Type"] }));
+
+// =======================
+// MIDDLEWARE
+// =======================
+app.use(cors({
+  origin: "*",
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"], // 👈 PENTING
+}));
+
 app.use(express.json());
 
-// koneksi MongoDB dengan await
+// =======================
+// DATABASE
+// =======================
 const connectDB = async () => {
   try {
-    await mongoose.connect('mongodb+srv://fegeirfan_db_user:Cikarang123@cluster0.fnk9fp9.mongodb.net/?appName=Cluster0', {
-      serverSelectionTimeoutMS: 30000,
-      socketTimeoutMS: 45000,
-    });
-    console.log('Database connected!');
+    await mongoose.connect(process.env.MONGO_URI || 
+      "mongodb+srv://fegeirfan_db_user:Cikarang123@cluster0.fnk9fp9.mongodb.net/?appName=Cluster0",
+      {
+        serverSelectionTimeoutMS: 30000,
+        socketTimeoutMS: 45000,
+      }
+    );
+    console.log("✅ Database connected!");
   } catch (err) {
-    console.error('Database connection error:', err);
+    console.error("❌ Database connection error:", err);
     process.exit(1);
   }
 };
 
-// rute
+// =======================
+// ROUTES
+// =======================
+app.use("/auth", authRouter);
 app.use("/posts", postsRouter);
 app.use("/notes", router);
 
-// endpoint lain
+// =======================
+// TEST ROUTES
+// =======================
 app.get("/", (req, res) => {
   res.send("Hello irfan!!!");
 });
 
-app.get("/gogo", (req, res) => {
-  res.send("Hello gogo!!!");
-});
-
-app.get("/error", (req, res, next) => {
-  const err = new Error("Not Authorized");
-  err.status = 401;
-  next(err);
-}); 
-
+// =======================
+// ERROR HANDLER
+// =======================
 app.use((err, req, res, next) => {
-  res.status(err.status || 500).send(err.message || "Server Error");
+  res.status(err.status || 500).json({
+    message: err.message || "Server Error",
+  });
 });
 
-// mulai server setelah koneksi MongoDB berhasil
+// =======================
+// START SERVER
+// =======================
+const PORT = process.env.PORT || 3000;
+
 const startServer = async () => {
   await connectDB();
- 
-};
- app.listen(3000, () => {
-    console.log("Server jalan di port localhost:3000");
+  app.listen(PORT, () => {
+    console.log(`🚀 Server jalan di http://localhost:${PORT}`);
   });
+};
+
 startServer();
+
 export default app;
