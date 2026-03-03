@@ -5,11 +5,11 @@ import { User } from "../models/index.js";
 
 const router = express.Router();
 
-// Fungsi hash password dengan SHA-256 dan salt
+
 function hashPassword(password) {
-  const salt = crypto.randomBytes(16).toString('hex'); // Generate salt 16 bytes
+  const salt = crypto.randomBytes(16).toString('hex'); 
   const hash = crypto.pbkdf2Sync(password, salt, 1000, 64, 'sha256').toString('hex');
-  return salt + ':' + hash; // Simpan sebagai salt:hash
+  return salt + ':' + hash; 
 }
 
 // Fungsi verify password
