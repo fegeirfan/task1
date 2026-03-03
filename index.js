@@ -7,16 +7,11 @@ import router from "./routes/notes.js";
 import postsRouter from "./routes/posts.js";
 import authRouter from "./routes/auth.js";
 
-// =======================
-// LOAD ENV
-// =======================
+
 dotenv.config();
 
 const app = express();
 
-// =======================
-// MIDDLEWARE
-// =======================
 app.use(cors({
   origin: "*",
   methods: ["GET", "POST", "PUT", "DELETE"],
@@ -25,9 +20,7 @@ app.use(cors({
 
 app.use(express.json());
 
-// =======================
-// DATABASE
-// =======================
+
 const connectDB = async () => {
   try {
     await mongoose.connect(process.env.MONGO_URI || 
@@ -37,39 +30,31 @@ const connectDB = async () => {
         socketTimeoutMS: 45000,
       }
     );
-    console.log("✅ Database connected!");
+    console.log(" Database connected!");
   } catch (err) {
-    console.error("❌ Database connection error:", err);
+    console.error(" Database connection error:", err);
     process.exit(1);
   }
 };
 
-// =======================
-// ROUTES
-// =======================
+
 app.use("/auth", authRouter);
 app.use("/posts", postsRouter);
 app.use("/notes", router);
 
-// =======================
-// TEST ROUTES
-// =======================
+
 app.get("/", (req, res) => {
   res.send("Hello irfan!!!");
 });
 
-// =======================
-// ERROR HANDLER
-// =======================
+
 app.use((err, req, res, next) => {
   res.status(err.status || 500).json({
     message: err.message || "Server Error",
   });
 });
 
-// =======================
-// START SERVER
-// =======================
+
 const PORT = process.env.PORT || 3000;
 
 const startServer = async () => {
