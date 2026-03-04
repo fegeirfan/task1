@@ -19,7 +19,6 @@ function verifyPassword(password, storedHash) {
   const verifyHash = crypto.pbkdf2Sync(password, salt, 1000, 64, 'sha256').toString('hex');
   return hash === verifyHash;
 }
-// ... (import tetap sama)
 
 // Tambahkan Route Verify (Taruh sebelum export default)
 router.get("/verify/:token", async (req, res) => {
@@ -78,8 +77,7 @@ router.post("/register", async (req, res) => {
     await newUser.save();
 
     // 4. Kirim Email dengan Link Verifikasi ke FRONTEND
-    const verificationUrl = `http://localhost:5173/verify-email?token=${vToken}`;
-
+ const verificationUrl = `${process.env.FRONTEND_URL}/auth/verify-email?token=${vToken}`;
     await sendEmail({
       to: email,
       subject: "Verifikasi Akun Kamu",
