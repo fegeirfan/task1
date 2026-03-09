@@ -9,6 +9,7 @@ import router from "./routes/notes.js";
 import postsRouter from "./routes/posts.js";
 import authRouter from "./routes/auth.js";
 import paymentRouter from "./routes/payment.js";
+import analisisRoute from "./routes/analisis.js";
 
 const app = express();
 
@@ -37,6 +38,8 @@ app.use("/auth", authRouter);
 app.use("/posts", postsRouter);
 app.use("/notes", router);
 app.use("/payment", paymentRouter);
+app.use("/analisis", analisisRoute);
+
 
 app.get("/", (req, res) => res.send("Hello irfan!!!"));
 
